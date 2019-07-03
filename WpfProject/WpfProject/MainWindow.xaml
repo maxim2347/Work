@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:WpfProject"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        xmlns:v="clr-namespace:WpfProject.View"
         xmlns:vm="clr-namespace:WpfProject.ViewModel"
         xmlns:sys="clr-namespace:System;assembly=mscorlib">
 

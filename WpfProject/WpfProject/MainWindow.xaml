@@ -5,8 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfProject"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        xmlns:v="clr-namespace:WpfProject.View"
+        xmlns:vm="clr-namespace:WpfProject.ViewModel"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Window.DataContext>
+        <vm:SolutionExplorerViewModel/>
+    </Window.DataContext>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition MinWidth="150" Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TreeView Grid.Column="1" ItemsSource="{Binding Items}" SelectedItemChanged="TreeView_SelectedItemChanged" Margin="10">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="Header" Value="{Binding Name}"/>
+                    <Setter Property="ItemsSource" Value="{Binding Items}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
     </Grid>
 </Window>

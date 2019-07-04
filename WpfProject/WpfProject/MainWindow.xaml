@@ -20,7 +20,7 @@
         <TreeView Grid.Column="1" ItemsSource="{Binding Items}" SelectedItemChanged="TreeView_SelectedItemChanged" Margin="10">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
-                    <Setter Property="Header" Value="{Binding Name}"/>
+                    <Setter Property="Header" Value="{Binding Name}" />
                     <Setter Property="ItemsSource" Value="{Binding Items}"/>
                 </Style>
             </TreeView.ItemContainerStyle>

@@ -17,7 +17,16 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition MinWidth="150" Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TreeView Grid.Column="1" ItemsSource="{Binding Items}" SelectedItemChanged="TreeView_SelectedItemChanged" Margin="10">
+        <Grid.RowDefinitions >
+            <RowDefinition Height="*"/>
+            <RowDefinition MinHeight="50" Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,0,10,0">
+            <Button Content="Save" Click="OnSaveButtonClick" IsEnabled="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" />
+        </StackPanel>
+        <TextBox x:Name="textBox" Margin="10"  Text="{Binding SelectedItem.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" TextChanged="OnTextBoxTextChanged"  />
+        <TreeView x:Name="tree" TreeViewItem.PreviewMouseDoubleClick="OnTreeViewPreviewMouseDoubleClick" ItemsSource="{Binding Items}" 
+                  Grid.Column="1" Margin="10" >
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
                     <Setter Property="Header" Value="{Binding Name}" />

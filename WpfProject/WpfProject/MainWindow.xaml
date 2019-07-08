@@ -22,25 +22,51 @@
             <RowDefinition MinHeight="50" Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,0,10,0">
-            <Button Content="Save" Click="OnSaveButtonClick" IsEnabled="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" />
+            <Button Content="Save" Command="{Binding SaveCommand}" IsEnabled="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" />
+            <Button Content="Close" Command="{Binding CloseTabCommand}"  />
         </StackPanel>
-        <!--<TextBox x:Name="textBox" Margin="10"  Text="{Binding SelectedItem.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" TextChanged="OnTextBoxTextChanged"  />-->
-        <TabControl Margin="10" ItemsSource="{Binding Tabs}">
+        <TabControl Margin="10" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedItem}">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
-                    <Setter Property="Header" Value="{Binding Name}"/>
-                    <Setter Property="Content" Value="{Binding Name}"/>
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="16"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="image" Grid.Column="0"/>
+                                    <TextBlock Grid.Column="1" Margin="5,0,5,0" Text="{Binding Path=Name}"/>
+                                    <Button Grid.Column="2" Content="X" Command="{Binding Path=CloseTabCommand}"  />
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Project">
+                                        <Setter TargetName="image" Property="Source" Value="Images/Open_16x16.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Folder">
+                                        <Setter TargetName="image" Property="Source" Value="Images/Open_16x16.png"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Content" Value="{Binding}"/>
+                    <Setter Property="ContentTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" TextChanged="OnTextBoxTextChanged"  />
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </TabControl.ItemContainerStyle>
         </TabControl>
-
-       
-        
         <TreeView x:Name="tree" TreeViewItem.PreviewMouseDoubleClick="OnTreeViewPreviewMouseDoubleClick" ItemsSource="{Binding Items}" 
                   Grid.Column="1" Margin="10" >
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
-                    <!--<Setter Property="Header"/>-->
                     <Setter Property="HeaderTemplate" >
                         <Setter.Value>
                             <DataTemplate>

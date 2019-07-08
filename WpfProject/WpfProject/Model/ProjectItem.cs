@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using WpfProject.Common;
+using System;
 
 namespace WpfProject.Model {
     public enum ProjectItemType { Project, Folder, File }
+
     public class ProjectItem : BaseVM {
         public string Name { get; set; }
         public string Path { get; set; }
@@ -12,5 +14,9 @@ namespace WpfProject.Model {
         public ProjectItem() {
             Items = new List<ProjectItem>();
         }
+        public BaseCommand CloseTabCommand { get; set; }
     }
+    
+    
+    
 }

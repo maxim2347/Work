@@ -23,10 +23,7 @@ namespace WpfProject {
             dc.SelectedItem = (ProjectItem)clickedItem.DataContext;
             dc.Tabs.Add(dc.SelectedItem);
         }
-        void OnSaveButtonClick(object sender, RoutedEventArgs e) {
-            var dc = DataContext as SolutionExplorerViewModel;
-            File.WriteAllText(dc.SelectedItem.Path, dc.SelectedItem.Text);
-        }
+
         void OnTextBoxTextChanged(object sender, TextChangedEventArgs e) {
             var dc = DataContext as SolutionExplorerViewModel;
             try {

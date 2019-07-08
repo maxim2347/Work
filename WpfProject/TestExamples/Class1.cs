@@ -119,9 +119,7 @@ namespace TestExamples {
                     break;
             }
             ToArrayBorder(pathArray, pathArrayCurrentElement+1, array, virtualArray, rowPosition, columPosition);
-
         }
-
 
         public static Direction ChoseDirection(int[,] virtualArray , int rowPosition ,int columPosition) {
             Direction direction= Direction.Start;

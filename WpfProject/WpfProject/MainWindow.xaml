@@ -24,12 +24,45 @@
         <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,0,10,0">
             <Button Content="Save" Click="OnSaveButtonClick" IsEnabled="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" />
         </StackPanel>
-        <TextBox x:Name="textBox" Margin="10"  Text="{Binding SelectedItem.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" TextChanged="OnTextBoxTextChanged"  />
+        <!--<TextBox x:Name="textBox" Margin="10"  Text="{Binding SelectedItem.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" TextChanged="OnTextBoxTextChanged"  />-->
+        <TabControl Margin="10" ItemsSource="{Binding Tabs}">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="TabItem">
+                    <Setter Property="Header" Value="{Binding Name}"/>
+                    <Setter Property="Content" Value="{Binding Name}"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+        </TabControl>
+
+       
+        
         <TreeView x:Name="tree" TreeViewItem.PreviewMouseDoubleClick="OnTreeViewPreviewMouseDoubleClick" ItemsSource="{Binding Items}" 
                   Grid.Column="1" Margin="10" >
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
-                    <Setter Property="Header" Value="{Binding Name}" />
+                    <!--<Setter Property="Header"/>-->
+                    <Setter Property="HeaderTemplate" >
+                        <Setter.Value>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="image" Grid.Column="0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Path=Name}"/>
+                                </Grid>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Project">
+                                        <Setter TargetName="image" Property="Source" Value="Images/Open_16x16.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Folder">
+                                        <Setter TargetName="image" Property="Source" Value="Images/Open_16x16.png"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
                     <Setter Property="ItemsSource" Value="{Binding Items}"/>
                 </Style>
             </TreeView.ItemContainerStyle>

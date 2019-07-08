@@ -21,6 +21,7 @@ namespace WpfProject {
                 return;
 
             dc.SelectedItem = (ProjectItem)clickedItem.DataContext;
+            dc.Tabs.Add(dc.SelectedItem);
         }
         void OnSaveButtonClick(object sender, RoutedEventArgs e) {
             var dc = DataContext as SolutionExplorerViewModel;

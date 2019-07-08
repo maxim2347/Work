@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using WpfProject.Common;
 using WpfProject.Model;
@@ -8,18 +9,21 @@ namespace WpfProject.ViewModel {
         bool isEnabled;
         ProjectItem selectedItem;
         bool isSelected;
+        ProjectItem addTab;
 
-        public List<ProjectItem> Items { get; }
+        public ObservableCollection<ProjectItem> Items { get; }
+        public ObservableCollection<ProjectItem> Tabs { get; }
         public bool IsEnabled { get { return isEnabled; } set { SetProperty(ref isEnabled, value); } }
         public ProjectItem SelectedItem { get { return selectedItem; } set { SetProperty(ref selectedItem, value);  } }
         public bool IsSelected { get { return isSelected; } set {SetProperty(ref isSelected, value); } }
-
+        
         public SolutionExplorerViewModel() {
             string startDirectory = @"C:\Work\Work\WpfProject\ProjectA";
-            Items = new List<ProjectItem>();
+            Items = new ObservableCollection<ProjectItem>();
+            Tabs = new ObservableCollection<ProjectItem>();
             ProjectItem Root = new ProjectItem() { Name = "ProjectA", Type = ProjectItemType.Project };
             Items.Add(Root);
-
+            Tabs.Add(new ProjectItem() { Name = "AAAA" });
             GetDirectoryTree(startDirectory, Root);
         }
 

@@ -10,7 +10,6 @@ namespace WpfProject.ViewModel {
         ProjectItem selectedItem;
         bool isSelected;
         
-        public BaseCommand CloseTabCommand { get; }
         public BaseCommand SaveCommand { get; }
         public ObservableCollection<ProjectItem> Items { get; }
         public ObservableCollection<ProjectItem> Tabs { get; }
@@ -22,12 +21,10 @@ namespace WpfProject.ViewModel {
             string startDirectory = @"C:\Work\Work\WpfProject\ProjectA";
             Items = new ObservableCollection<ProjectItem>();
             Tabs = new ObservableCollection<ProjectItem>();
-            ProjectItem Root = new ProjectItem() { Name = "ProjectA", Type = ProjectItemType.Project };
-            Root.CloseTabCommand = new BaseCommand(() => CloseTab(Root));
+            ProjectItem Root = new ProjectItem(CloseTab) { Name = "ProjectA", Type = ProjectItemType.Project };
             Items.Add(Root);
             GetDirectoryTree(startDirectory, Root);
             SaveCommand = new BaseCommand(OnSave);
-            CloseTabCommand = new BaseCommand(CloseSelectedItem);
         }
 
         void GetDirectoryTree(string start ,ProjectItem root) {
@@ -35,25 +32,19 @@ namespace WpfProject.ViewModel {
             foreach(var x in dd) {
                 string x1 = x;
                 x1.Remove(0,start.Length);
-                ProjectItem item = new ProjectItem() {Path=x, Name = x.Remove(0, start.Length+1), Type =ProjectItemType.Folder };
-                item.CloseTabCommand = new BaseCommand(() => CloseTab(item));
+                ProjectItem item = new ProjectItem(CloseTab) {Path=x, Name = x.Remove(0, start.Length+1), Type =ProjectItemType.Folder };
                 root.Items.Add(item);
                 GetDirectoryTree(x, item);
             }
             foreach(var y in Directory.GetFiles(start)) {
-                ProjectItem file = new ProjectItem() { Path = y,
+                ProjectItem file = new ProjectItem(CloseTab) { Path = y,
                     Name = y.Remove(0, start.Length + 1), Type = ProjectItemType.File,Text= File.ReadAllText(y) };
-                file.CloseTabCommand = new BaseCommand(() => CloseTab(file));
                 root.Items.Add(file);
             }
         }
 
         void OnSave() {
             File.WriteAllText(SelectedItem.Path, SelectedItem.Text);
-        }
-
-        void CloseSelectedItem() {
-            CloseTab(SelectedItem);
         }
         void CloseTab(ProjectItem item) {
             Tabs.Remove(item);

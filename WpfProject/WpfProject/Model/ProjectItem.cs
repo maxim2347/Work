@@ -11,12 +11,16 @@ namespace WpfProject.Model {
         public ProjectItemType Type { get; set; }
         public List<ProjectItem> Items { get; }
         public string Text { get; set; }
-        public ProjectItem() {
+
+        Action<ProjectItem> onClosed;
+        public ProjectItem(Action<ProjectItem> onClosed) {
             Items = new List<ProjectItem>();
+            this.onClosed = onClosed;
+            CloseTabCommand = new BaseCommand(OnCloseTabCommandExecute);
         }
-        public BaseCommand CloseTabCommand { get; set; }
+        public BaseCommand CloseTabCommand { get; private set; }
+        void OnCloseTabCommandExecute() {
+            onClosed(this);
+        }
     }
-    
-    
-    
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace WpfProject.Tests {
     [TestFixture]
-    public class Tests {
+    public class DelegateTests {
         void Foo1(Action do1, Action do2) {
             do1();
             do2();

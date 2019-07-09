@@ -22,7 +22,7 @@
             <RowDefinition MinHeight="50" Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,0,10,0">
-            <Button Content="Save" Command="{Binding SaveCommand}" IsEnabled="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" />
+            <Button Content="Save" Command="{Binding SaveCommand}" />
             <Button Content="Close" Command="{Binding SelectedItem.CloseTabCommand}" />
         </StackPanel>
         <TabControl Margin="10" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedItem}">
@@ -56,7 +56,7 @@
                     <Setter Property="ContentTemplate">
                         <Setter.Value>
                             <DataTemplate>
-                                <TextBox Text="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" TextChanged="OnTextBoxTextChanged"  />
+                                <TextBox Text="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"   />
                             </DataTemplate>
                         </Setter.Value>
                     </Setter>

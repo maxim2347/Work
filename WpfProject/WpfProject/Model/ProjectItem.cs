@@ -10,17 +10,49 @@ namespace WpfProject.Model {
         public string Path { get; set; }
         public ProjectItemType Type { get; set; }
         public List<ProjectItem> Items { get; }
-        public string Text { get; set; }
+        public string text;
+        public string Text { get { return text; }
+            set {
+                if(text == value) return;
+                text = value;
+                RiseTextChange();
+            }
+        }
 
         Action<ProjectItem> onClosed;
         public ProjectItem(Action<ProjectItem> onClosed) {
             Items = new List<ProjectItem>();
             this.onClosed = onClosed;
-            CloseTabCommand = new BaseCommand(OnCloseTabCommandExecute);
+            CloseTabCommand = new BaseCommand(OnCloseTabCommandExecute, CanCloseTab);
         }
         public BaseCommand CloseTabCommand { get; private set; }
         void OnCloseTabCommandExecute() {
             onClosed(this);
         }
+
+        Func<bool> CanCloseTab = () => {
+            return true;
+        };
+
+        public event EventHandler TextChanged;
+        public void RiseTextChange() {
+            TextChanged?.Invoke(this, EventArgs.Empty);
+        }
+
     }
 }
+
+//ProjectItem.Text set
+//raise ProjectItem.TextChanged
+//SolutionExplorerViewModel.OnTextChanged
+//SolutionExplorerViewModel.SaveCommand.RaiseCanExecuteChanged
+//BaseCommand.RaiseCanExecuteChanged
+//raise BaseCommand.CanExecuteChanged
+//Save Button.OnCommandCanExecuteChanged
+//Button.UpdateIsEnabled - IsEnable = something
+//Button.Command.CanExecute(CommandParamter) -something
+//SaveCommand BaseCommand.CanExecute- something
+//SolutionExplorerViewModel.CanSave - return something
+
+
+

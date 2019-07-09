@@ -21,18 +21,8 @@ namespace WpfProject {
                 return;
 
             dc.SelectedItem = (ProjectItem)clickedItem.DataContext;
-            dc.Tabs.Add(dc.SelectedItem);
-        }
-
-        void OnTextBoxTextChanged(object sender, TextChangedEventArgs e) {
-            var dc = DataContext as SolutionExplorerViewModel;
-            try {
-                string sourseText = File.ReadAllText(dc.SelectedItem.Path);
-                if(dc.SelectedItem.Text != sourseText)
-                    dc.IsEnabled = true;
-                else dc.IsEnabled = false;
-            } catch { };
-
+            if(dc.SelectedItem.Type == ProjectItemType.File)
+                dc.Tabs.Add(dc.SelectedItem);
         }
 
         TreeViewItem TryGetClickedItem(TreeView treeView, MouseButtonEventArgs e) {

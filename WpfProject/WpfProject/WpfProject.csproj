@@ -64,7 +64,8 @@
     <Compile Include="Common\BaseCommand.cs" />
     <Compile Include="Common\BaseVM.cs" />
     <Compile Include="Model\ProjectItem.cs" />
-    <Compile Include="Tests\Tests.cs" />
+    <Compile Include="Tests\Delegates.cs" />
+    <Compile Include="Tests\Events.cs" />
     <Compile Include="ViewModel\SolutionExplorerViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

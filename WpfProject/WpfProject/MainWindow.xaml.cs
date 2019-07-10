@@ -21,8 +21,14 @@ namespace WpfProject {
                 return;
 
             dc.SelectedItem = (ProjectItem)clickedItem.DataContext;
-            if(dc.SelectedItem.Type == ProjectItemType.File)
-                dc.Tabs.Add(dc.SelectedItem);
+            if(dc.SelectedItem.Type == ProjectItemType.File) {
+                bool isAlradyTab = false;
+                foreach(var x in dc.Tabs) {
+                    if(x.Name == dc.SelectedItem.Name)
+                        isAlradyTab = true;
+                }
+                if(!isAlradyTab)dc.Tabs.Add(dc.SelectedItem);
+            }
         }
 
         TreeViewItem TryGetClickedItem(TreeView treeView, MouseButtonEventArgs e) {

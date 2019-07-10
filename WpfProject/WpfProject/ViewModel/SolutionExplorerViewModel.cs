@@ -1,7 +1,9 @@
-﻿using System;
+﻿//using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Forms;
 using WpfProject.Common;
 using WpfProject.Model;
 
@@ -11,6 +13,11 @@ namespace WpfProject.ViewModel {
         bool isSelected;
 
         public BaseCommand SaveCommand { get; }
+        public BaseCommand SaveAsCommand { get; }
+        public BaseCommand CloseAllTabsCommand { get; }
+        public BaseCommand CloseCurrentTabCommand { get; }
+        public BaseCommand AddNewFileCommand { get; }
+        public BaseCommand AddNewFolderCommand { get; }
         public ObservableCollection<ProjectItem> Items { get; }
         public ObservableCollection<ProjectItem> Tabs { get; }
         public ProjectItem SelectedItem {
@@ -23,6 +30,9 @@ namespace WpfProject.ViewModel {
                     if(selectedItem != null)
                         selectedItem.TextChanged += OnTextChanged;
                     SaveCommand.RaiseCanExecuteChanged();
+                    SaveAsCommand.RaiseCanExecuteChanged();
+                    CloseAllTabsCommand.RaiseCanExecuteChanged();
+                    CloseCurrentTabCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -36,13 +46,16 @@ namespace WpfProject.ViewModel {
             Items.Add(Root);
             GetDirectoryTree(startDirectory, Root);
             SaveCommand = new BaseCommand(OnSave, CanSave);
+            SaveAsCommand = new BaseCommand(OnSaveAs, CanSaveAs);
+            CloseAllTabsCommand = new BaseCommand(OnCloseAllTabs, CanCloseTabs);
+            CloseCurrentTabCommand = new BaseCommand(OnCloseCurrentTab, CanCloseTabs);
+            AddNewFileCommand = new BaseCommand(OnAddNewFile, CanAddNewFile);
+            AddNewFolderCommand = new BaseCommand(OnAddNewFolder, CanAddNewFile);
         }
 
         void GetDirectoryTree(string start, ProjectItem root) {
             string[] dd = Directory.GetDirectories(start);
             foreach(var x in dd) {
-                string x1 = x;
-                x1.Remove(0, start.Length);
                 ProjectItem item = new ProjectItem(CloseTab) { Path = x, Name = x.Remove(0, start.Length + 1), Type = ProjectItemType.Folder };
                 root.Items.Add(item);
                 GetDirectoryTree(x, item);
@@ -75,5 +88,96 @@ namespace WpfProject.ViewModel {
             Tabs.Remove(item);
         }
 
+        void OnCloseCurrentTab() {
+            Tabs.Remove(SelectedItem);
+        }
+        void OnCloseAllTabs() {
+            Tabs.Clear();
+        }
+        bool CanCloseTabs() {
+            if(Tabs.Count>0) return true;
+            else return false;
+        }
+
+        void OnSaveAs1() {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            if(saveFileDialog1.ShowDialog() == DialogResult.OK) {
+                string filePath = saveFileDialog1.FileName;
+                string fileText = SelectedItem.Text;
+                File.WriteAllText(filePath,fileText );
+                string fileDirectory = Path.GetDirectoryName(filePath);
+                string fileName = Path.GetFileName(filePath);
+                ProjectItem newItem = new ProjectItem(CloseTab) {Path=fileDirectory ,Name= fileName, Type=ProjectItemType.File,
+                Text=fileText };
+                AddItemToItems(newItem,Items[0]);
+            }
+        }
+
+        void OnSaveAs() {
+            AddNewFile(SelectedItem.Text);
+        }
+        bool CanSaveAs() {
+            if(SelectedItem?.Type != ProjectItemType.File) return false;
+            else return true;
+        }
+
+        void OnAddNewFile() {
+            AddNewFile("");
+        }
+        bool CanAddNewFile() {
+            return true;
+        }
+
+        void OnAddNewFolder() {
+            ChoseFolderWindow choseFolderWindow = new ChoseFolderWindow();
+            if(choseFolderWindow.ShowDialog() == true) {
+                string folderName = choseFolderWindow.FolderName;
+                if( folderName != "") {
+                    DirectoryInfo di;
+                    if(SelectedItem != null) 
+                        di = Directory.CreateDirectory(SelectedItem.Path + "//" + folderName);
+                     else 
+                        di = Directory.CreateDirectory(@"C:\Work\Work\WpfProject\ProjectA\" + folderName);
+                    ProjectItem newItem = new ProjectItem(CloseTab) {
+                        Path = di.Name, Name = folderName, Type = ProjectItemType.Folder
+                    };
+                    AddItemToItems(newItem, Items[0]);
+                    MessageBox.Show("Folder created");
+                } else
+                    MessageBox.Show("Incorrect folder name");
+
+            }
+        }
+
+        void AddNewFile(string text) {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            if(saveFileDialog1.ShowDialog() == DialogResult.OK) {
+                string filePath = saveFileDialog1.FileName;
+                string fileText = text;
+                File.WriteAllText(filePath, fileText);
+                string fileDirectory = Path.GetDirectoryName(filePath);
+                string fileName = Path.GetFileName(filePath);
+                ProjectItem newItem = new ProjectItem(CloseTab) {
+                    Path = fileDirectory, Name = fileName, Type = ProjectItemType.File,Text = fileText
+                };
+                AddItemToItems(newItem, Items[0]);
+            }
+        }
+        void AddItemToItems(ProjectItem newItem, ProjectItem root) {
+            foreach(ProjectItem x in root.Items) {
+                if(x.Path == newItem.Path && x.Type != ProjectItemType.File) {
+                    x.Items.Add(newItem);
+                    return;
+                }
+                AddItemToItems(newItem, x);
+            }
+
+        }
     }
 }

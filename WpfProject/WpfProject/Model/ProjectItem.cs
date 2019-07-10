@@ -42,17 +42,3 @@ namespace WpfProject.Model {
     }
 }
 
-//ProjectItem.Text set
-//raise ProjectItem.TextChanged
-//SolutionExplorerViewModel.OnTextChanged
-//SolutionExplorerViewModel.SaveCommand.RaiseCanExecuteChanged
-//BaseCommand.RaiseCanExecuteChanged
-//raise BaseCommand.CanExecuteChanged
-//Save Button.OnCommandCanExecuteChanged
-//Button.UpdateIsEnabled - IsEnable = something
-//Button.Command.CanExecute(CommandParamter) -something
-//SaveCommand BaseCommand.CanExecute- something
-//SolutionExplorerViewModel.CanSave - return something
-
-
-

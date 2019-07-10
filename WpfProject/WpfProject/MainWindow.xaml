@@ -18,14 +18,27 @@
             <ColumnDefinition MinWidth="150" Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions >
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition MinHeight="50" Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Column="0" Grid.Row="1" Margin="10,0,10,0">
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="Add New">
+                    <MenuItem Header="Folder" Command="{Binding AddNewFolderCommand}"/>
+                    <MenuItem Header="File" Command="{Binding AddNewFileCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
+                <MenuItem Header="Save as" Command="{Binding SaveAsCommand}"/>
+                <MenuItem Header="Close" Command="{Binding CloseCurrentTabCommand}"/>
+                <MenuItem Header="Close all" Command="{Binding CloseAllTabsCommand}"/>
+            </MenuItem>
+        </Menu>
+        <!--<StackPanel Grid.Column="0" Grid.Row="2" Margin="10,0,10,0">
             <Button Content="Save" Command="{Binding SaveCommand}" />
             <Button Content="Close" Command="{Binding SelectedItem.CloseTabCommand}" />
-        </StackPanel>
-        <TabControl Margin="10" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedItem}">
+        </StackPanel>-->
+        <TabControl Grid.Row="1" Margin="10" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedItem}">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
                     <Setter Property="HeaderTemplate">
@@ -64,7 +77,7 @@
             </TabControl.ItemContainerStyle>
         </TabControl>
         <TreeView x:Name="tree" TreeViewItem.PreviewMouseDoubleClick="OnTreeViewPreviewMouseDoubleClick" ItemsSource="{Binding Items}" 
-                  Grid.Column="1" Margin="10" >
+                  Grid.Column="1" Grid.Row="1" Margin="10" >
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
                     <Setter Property="HeaderTemplate" >
@@ -92,6 +105,15 @@
                     <Setter Property="ItemsSource" Value="{Binding Items}"/>
                 </Style>
             </TreeView.ItemContainerStyle>
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add New">
+                        <MenuItem Header="Folder"/>
+                        <MenuItem Header="File"/>
+                    </MenuItem>
+                    <MenuItem Header="Rename"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
         </TreeView>
     </Grid>
 </Window>

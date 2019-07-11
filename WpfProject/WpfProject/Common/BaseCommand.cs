@@ -11,13 +11,13 @@ namespace WpfProject.Common {
         readonly Func<object,bool> canExecuteParameter;
         readonly Func<bool> canExecute;
 
-        public BaseCommand(Action action ,Func<bool> canExecute) {
+        public BaseCommand(Action action, Func<bool> canExecute = null) {
             this.action1 = action;
             this.canExecute = canExecute;
         }
-        public BaseCommand(Action<object> action, Func<object, bool> canExecuteParametr) {
+        public BaseCommand(Action<object> action, Func<object, bool> canExecuteParameter = null) {
             this.action2 = action;
-            this.canExecuteParameter = canExecuteParametr;
+            this.canExecuteParameter = canExecuteParameter;
         }
         void ICommand.Execute(object parameter) {
             action1?.Invoke();

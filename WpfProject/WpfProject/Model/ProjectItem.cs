@@ -24,16 +24,12 @@ namespace WpfProject.Model {
         public ProjectItem(Action<ProjectItem> onClosed) {
             Items = new ObservableCollection<ProjectItem>();
             this.onClosed = onClosed;
-            CloseTabCommand = new BaseCommand(OnCloseTabCommandExecute, CanCloseTab);
+            CloseTabCommand = new BaseCommand(OnCloseTabCommandExecute);
         }
         public BaseCommand CloseTabCommand { get; private set; }
         void OnCloseTabCommandExecute() {
             onClosed(this);
         }
-
-        Func<bool> CanCloseTab = () => {
-            return true;
-        };
 
         public event EventHandler TextChanged;
         public void RiseTextChange() {

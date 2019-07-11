@@ -35,10 +35,6 @@
                 <MenuItem Header="Close all" Command="{Binding CloseAllTabsCommand}"/>
             </MenuItem>
         </Menu>
-        <!--<StackPanel Grid.Column="0" Grid.Row="2" Margin="10,0,10,0">
-            <Button Content="Save" Command="{Binding SaveCommand}" />
-            <Button Content="Close" Command="{Binding SelectedItem.CloseTabCommand}" />
-        </StackPanel>-->
         <TabControl Grid.Row="1" Margin="10" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedItem}">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
@@ -47,22 +43,12 @@
                             <DataTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="16"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Image x:Name="image" Grid.Column="0"/>
-                                    <TextBlock Grid.Column="1" Margin="5,0,5,0" Text="{Binding Path=Name}"/>
-                                    <Button Grid.Column="2" Content="X" Command="{Binding Path=CloseTabCommand}"  />
+                                    <TextBlock Margin="5,0,5,0" Text="{Binding Path=Name}"/>
+                                    <Button Grid.Column="1" Content="X" Command="{Binding Path=CloseTabCommand}"  />
                                 </Grid>
-                                <DataTemplate.Triggers>
-                                    <DataTrigger Binding="{Binding Type}" Value="Project">
-                                        <Setter TargetName="image" Property="Source" Value="Images/Open_16x16.png"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Type}" Value="Folder">
-                                        <Setter TargetName="image" Property="Source" Value="Images/Open_16x16.png"/>
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </Setter.Value>
                     </Setter>

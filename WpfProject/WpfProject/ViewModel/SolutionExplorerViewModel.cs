@@ -21,23 +21,7 @@ namespace WpfProject.ViewModel {
         public BaseCommand ContextMenuAddFileCommand { get; }
         public ObservableCollection<ProjectItem> Items { get; }
         public ObservableCollection<ProjectItem> Tabs { get; }
-        public ProjectItem SelectedItem {
-            get { return selectedItem; }
-            set {
-                var oldValue = selectedItem;
-                if(SetProperty(ref selectedItem, value)) {
-                    if(oldValue != null)
-                        oldValue.TextChanged -= OnTextChanged;
-                    if(selectedItem != null)
-                        selectedItem.TextChanged += OnTextChanged;
-                    SaveCommand.RaiseCanExecuteChanged();
-                    SaveAsCommand.RaiseCanExecuteChanged();
-                    CloseAllTabsCommand.RaiseCanExecuteChanged();
-                    CloseCurrentTabCommand.RaiseCanExecuteChanged();
-                    AddNewFolderCommand.RaiseCanExecuteChanged();
-                }
-            }
-        }
+        public ProjectItem SelectedItem { get { return selectedItem; } set { SetProperty(ref selectedItem, value, OnSelectedItemChanged); } }
         public bool IsSelected { get { return isSelected; } set { SetProperty(ref isSelected, value); } }
 
         public SolutionExplorerViewModel() {
@@ -47,13 +31,25 @@ namespace WpfProject.ViewModel {
             ProjectItem Root = new ProjectItem(CloseTab) { Name = "ProjectA", Type = ProjectItemType.Project };
             Items.Add(Root);
             GetDirectoryTree(startDirectory, Root);
-            SaveCommand = new BaseCommand(OnSave, CanSave);
-            SaveAsCommand = new BaseCommand(OnSaveAs, CanSaveAs);
-            CloseAllTabsCommand = new BaseCommand(OnCloseAllTabs, CanCloseTabs);
-            CloseCurrentTabCommand = new BaseCommand(OnCloseCurrentTab, CanCloseTabs);
-            AddNewFileCommand = new BaseCommand(OnAddNewFile, CanAddNewFile);
-            AddNewFolderCommand = new BaseCommand(OnAddNewFolder, CanContextMenuAddFile);
-           // ContextMenuAddFileCommand = new BaseCommand()
+
+            SaveCommand = new BaseCommand(Save, CanSave);
+            SaveAsCommand = new BaseCommand(SaveAs, CanSaveAs);
+            CloseAllTabsCommand = new BaseCommand(CloseAllTabs, CanCloseTabs);
+            CloseCurrentTabCommand = new BaseCommand(CloseCurrentTab, CanCloseTabs);
+            AddNewFileCommand = new BaseCommand(AddNewFile, CanAddNewFile);
+            AddNewFolderCommand = new BaseCommand(AddNewFolder, CanContextMenuAddFile);
+        }
+
+        void OnSelectedItemChanged(ProjectItem oldValue, ProjectItem newValue) {
+            if(oldValue != null)
+                oldValue.TextChanged -= OnTextChanged;
+            if(newValue != null)
+                newValue.TextChanged += OnTextChanged;
+            SaveCommand.RaiseCanExecuteChanged();
+            SaveAsCommand.RaiseCanExecuteChanged();
+            CloseAllTabsCommand.RaiseCanExecuteChanged();
+            CloseCurrentTabCommand.RaiseCanExecuteChanged();
+            AddNewFolderCommand.RaiseCanExecuteChanged();
         }
 
         void GetDirectoryTree(string start, ProjectItem root) {
@@ -72,7 +68,7 @@ namespace WpfProject.ViewModel {
             }
         }
 
-        void OnSave() {
+        void Save() {
             File.WriteAllText(SelectedItem.Path, SelectedItem.Text);
         }
         bool CanSave() {
@@ -82,63 +78,37 @@ namespace WpfProject.ViewModel {
                 return true;
             return false;
         }
-
-        void OnTextChanged(object sender, EventArgs e) {
-            SaveCommand.RaiseCanExecuteChanged();
+        void SaveAs() {
+            AddNewFile(SelectedItem.Text);
         }
-
+        bool CanSaveAs() {
+            return SelectedItem?.Type == ProjectItemType.File;
+        }
+        void CloseAllTabs() {
+            Tabs.Clear();
+        }
+        void CloseCurrentTab() {
+            Tabs.Remove(SelectedItem);
+        }
+        bool CanCloseTabs() {
+            return Tabs.Count > 0;
+        }
         void CloseTab(ProjectItem item) {
             Tabs.Remove(item);
         }
 
-        void OnCloseCurrentTab() {
-            Tabs.Remove(SelectedItem);
-        }
-        void OnCloseAllTabs() {
-            Tabs.Clear();
-        }
-        bool CanCloseTabs() {
-            if(Tabs.Count>0) return true;
-            else return false;
-        }
-
-        void OnSaveAs1() {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveFileDialog1.FilterIndex = 2;
-            saveFileDialog1.RestoreDirectory = true;
-            if(saveFileDialog1.ShowDialog() == DialogResult.OK) {
-                string filePath = saveFileDialog1.FileName;
-                string fileText = SelectedItem.Text;
-                File.WriteAllText(filePath,fileText );
-                string fileDirectory = Path.GetDirectoryName(filePath);
-                string fileName = Path.GetFileName(filePath);
-                ProjectItem newItem = new ProjectItem(CloseTab) {Path=fileDirectory ,Name= fileName, Type=ProjectItemType.File,
-                Text=fileText };
-                AddItemToItems(newItem,Items[0]);
-            }
-        }
-
-        void OnSaveAs() {
-            AddNewFile(SelectedItem.Text);
-        }
-        bool CanSaveAs() {
-            if(SelectedItem?.Type != ProjectItemType.File) return false;
-            else return true;
-        }
-
-        void OnAddNewFile() {
+        void AddNewFile() {
             AddNewFile("");
         }
-        void OnAddNewFolder() {
+        void AddNewFolder() {
             ChoseFolderWindow choseFolderWindow = new ChoseFolderWindow();
             if(choseFolderWindow.ShowDialog() == true) {
                 string folderName = choseFolderWindow.FolderName;
-                if( folderName != "" && SelectedItem.Type != ProjectItemType.File) {
+                if(folderName != "" && SelectedItem.Type != ProjectItemType.File) {
                     DirectoryInfo di;
-                    if(SelectedItem != null )
+                    if(SelectedItem != null)
                         di = Directory.CreateDirectory(SelectedItem.Path + "\\" + folderName);
-                     else 
+                    else
                         di = Directory.CreateDirectory(@"C:\Work\Work\WpfProject\ProjectA\" + folderName);
                     ProjectItem newItem = new ProjectItem(CloseTab) {
                         Path = di.FullName, Name = folderName, Type = ProjectItemType.Folder
@@ -153,18 +123,6 @@ namespace WpfProject.ViewModel {
         bool CanAddNewFile() {
             return true;
         }
-
-        void OnContextMenuAddFile() {
-            if(SelectedItem?.Type !=ProjectItemType.File)
-                AddNewFile("");
-        }
-
-        bool CanContextMenuAddFile() {
-            if(SelectedItem.Type != ProjectItemType.File)
-                return true;
-            return false;
-        }
-
         void AddNewFile(string text) {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.txt";
@@ -177,13 +135,13 @@ namespace WpfProject.ViewModel {
                 string fileDirectory = Path.GetDirectoryName(filePath);
                 string fileName = Path.GetFileName(filePath);
                 ProjectItem newItem = new ProjectItem(CloseTab) {
-                    Path = fileDirectory, Name = fileName, Type = ProjectItemType.File,Text = fileText
+                    Path = fileDirectory, Name = fileName, Type = ProjectItemType.File, Text = fileText
                 };
                 AddItemToItems(newItem, Items[0]);
             }
         }
         void AddItemToItems(ProjectItem newItem, ProjectItem root) {
-            string newItemPerentPath = newItem.Path.Remove(newItem.Path.Length - newItem.Name.Length-1, newItem.Name.Length+1);
+            string newItemPerentPath = newItem.Path.Remove(newItem.Path.Length - newItem.Name.Length - 1, newItem.Name.Length + 1);
             foreach(ProjectItem x in root.Items) {
                 if(x.Path == newItemPerentPath && x.Type != ProjectItemType.File) {
                     x.Items.Add(newItem);
@@ -192,6 +150,20 @@ namespace WpfProject.ViewModel {
                 AddItemToItems(newItem, x);
             }
 
+        }
+
+        void OnContextMenuAddFile() {
+            if(SelectedItem?.Type != ProjectItemType.File)
+                AddNewFile("");
+        }
+        bool CanContextMenuAddFile() {
+            if(SelectedItem.Type != ProjectItemType.File)
+                return true;
+            return false;
+        }
+
+        void OnTextChanged(object sender, EventArgs e) {
+            SaveCommand.RaiseCanExecuteChanged();
         }
     }
 }

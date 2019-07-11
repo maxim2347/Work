@@ -11,7 +11,7 @@ namespace WpfProject.View {
             InitializeComponent();
         }
         void OnTreeViewPreviewMouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            var dc = DataContext as SolutionExplorerViewModel;
+            var dc = DataContext as MainViewModel;
 
             TreeViewItem clickedItem = TryGetClickedItem(tree, e);
             if(clickedItem == null)
@@ -34,7 +34,7 @@ namespace WpfProject.View {
             return hit as TreeViewItem;
         }
         void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-            var dc = DataContext as SolutionExplorerViewModel;
+            var dc = DataContext as MainViewModel;
             dc.SelectedItem = e.NewValue as ProjectItem;
         }
     }

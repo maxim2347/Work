@@ -71,7 +71,7 @@
     <Compile Include="Tests\Delegates.cs" />
     <Compile Include="Tests\Events.cs" />
     <Compile Include="ViewModel\NewFolderViewModel.cs" />
-    <Compile Include="ViewModel\SolutionExplorerViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>

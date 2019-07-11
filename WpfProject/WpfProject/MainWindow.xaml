@@ -10,7 +10,7 @@
 
     <v:MainView>
         <v:MainView.DataContext>
-            <vm:SolutionExplorerViewModel/>
+            <vm:MainViewModel/>
         </v:MainView.DataContext>
     </v:MainView>
 </Window>

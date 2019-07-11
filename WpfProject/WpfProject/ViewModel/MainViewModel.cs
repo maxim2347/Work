@@ -8,7 +8,7 @@ using WpfProject.Common;
 using WpfProject.Model;
 
 namespace WpfProject.ViewModel {
-    public class SolutionExplorerViewModel : BaseVM {
+    public class MainViewModel : BaseVM {
         ProjectItem selectedItem;
         bool isSelected;
 
@@ -24,7 +24,7 @@ namespace WpfProject.ViewModel {
         public ProjectItem SelectedItem { get { return selectedItem; } set { SetProperty(ref selectedItem, value, OnSelectedItemChanged); } }
         public bool IsSelected { get { return isSelected; } set { SetProperty(ref isSelected, value); } }
 
-        public SolutionExplorerViewModel() {
+        public MainViewModel() {
             string startDirectory = @"C:\Work\Work\WpfProject\ProjectA";
             Items = new ObservableCollection<ProjectItem>();
             Tabs = new ObservableCollection<ProjectItem>();

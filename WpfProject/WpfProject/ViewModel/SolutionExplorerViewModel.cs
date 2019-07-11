@@ -102,9 +102,7 @@ namespace WpfProject.ViewModel {
         }
         void AddNewFolder() {
             var newFolderVM = new NewFolderViewModel();
-            ChoseFolderWindow choseFolderWindow = new ChoseFolderWindow();
-            choseFolderWindow.DataContext = newFolderVM;
-            if(choseFolderWindow.ShowDialog() == true) {
+            if(ShowNewFolderDialog(newFolderVM) == true) {
                 string folderName = newFolderVM.FolderName;
                 if(folderName != "" && SelectedItem.Type != ProjectItemType.File) {
                     DirectoryInfo di;
@@ -166,6 +164,11 @@ namespace WpfProject.ViewModel {
 
         void OnTextChanged(object sender, EventArgs e) {
             SaveCommand.RaiseCanExecuteChanged();
+        }
+
+        protected virtual bool? ShowNewFolderDialog(NewFolderViewModel vm) {
+            var newFolderWindow = new NewFolderWindow() { DataContext = vm };
+            return newFolderWindow.ShowDialog();
         }
     }
 }

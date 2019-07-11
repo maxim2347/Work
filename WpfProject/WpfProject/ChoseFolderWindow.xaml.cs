@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 
 namespace WpfProject {
-    public partial class ChoseFolderWindow : Window {
-        public ChoseFolderWindow() {
+    public partial class NewFolderWindow : Window {
+        public NewFolderWindow() {
             InitializeComponent();
         }
 

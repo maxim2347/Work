@@ -70,9 +70,13 @@
     <Compile Include="Model\ProjectItem.cs" />
     <Compile Include="Tests\Delegates.cs" />
     <Compile Include="Tests\Events.cs" />
+    <Compile Include="ViewModel\NewFolderViewModel.cs" />
     <Compile Include="ViewModel\SolutionExplorerViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\NewFolderView.xaml.cs">
+      <DependentUpon>NewFolderView.xaml</DependentUpon>
     </Compile>
     <Page Include="ChoseFolderWindow.xaml">
       <SubType>Designer</SubType>
@@ -91,6 +95,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\NewFolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

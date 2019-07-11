@@ -27,15 +27,13 @@ namespace WpfProject.View {
                 if(!isAlradyTab) dc.Tabs.Add(dc.SelectedItem);
             }
         }
-
         TreeViewItem TryGetClickedItem(TreeView treeView, MouseButtonEventArgs e) {
             var hit = e.OriginalSource as DependencyObject;
             while(hit != null && !(hit is TreeViewItem))
                 hit = VisualTreeHelper.GetParent(hit);
             return hit as TreeViewItem;
         }
-
-        private void Tree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+        void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
             var dc = DataContext as SolutionExplorerViewModel;
             dc.SelectedItem = e.NewValue as ProjectItem;
         }

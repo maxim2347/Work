@@ -101,9 +101,11 @@ namespace WpfProject.ViewModel {
             AddNewFile("");
         }
         void AddNewFolder() {
+            var newFolderVM = new NewFolderViewModel();
             ChoseFolderWindow choseFolderWindow = new ChoseFolderWindow();
+            choseFolderWindow.DataContext = newFolderVM;
             if(choseFolderWindow.ShowDialog() == true) {
-                string folderName = choseFolderWindow.FolderName;
+                string folderName = newFolderVM.FolderName;
                 if(folderName != "" && SelectedItem.Type != ProjectItemType.File) {
                     DirectoryInfo di;
                     if(SelectedItem != null)

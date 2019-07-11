@@ -21,7 +21,7 @@ namespace WpfProject {
                 return;
 
             dc.SelectedItem = (ProjectItem)clickedItem.DataContext;
-            if(dc.SelectedItem.Type == ProjectItemType.File) {
+            if(dc.SelectedItem?.Type == ProjectItemType.File) {
                 bool isAlradyTab = false;
                 foreach(var x in dc.Tabs) {
                     if(x.Name == dc.SelectedItem.Name)
@@ -36,6 +36,11 @@ namespace WpfProject {
             while(hit != null && !(hit is TreeViewItem))
                 hit = VisualTreeHelper.GetParent(hit);
             return hit as TreeViewItem;
+        }
+
+        private void Tree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+            var dc = DataContext as SolutionExplorerViewModel;
+            dc.SelectedItem = e.NewValue as ProjectItem;
         }
     }
 }

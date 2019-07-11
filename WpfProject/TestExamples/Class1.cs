@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +23,22 @@ namespace TestExamples {
         {
             Assert.AreEqual(5, Helper.ToCenterArrayPath(1, 5));
         }
+        [Test]
+        public void Test4() {
+            Assert.AreEqual(@"C:\Work\Work\WpfProject", Helper.CutName());
+
+        }
     }
 
     public static class Helper {
-        public enum Direction { Right,Down,Left,Up,Start}
+        public enum Direction { Right, Down, Left, Up, Start }
+
+        public static string CutName(){
+            string startDirectory = @"C:\Work\Work\WpfProject\ProjectA";
+            string Name = "ProjectA";
+            string CutResult = startDirectory.Remove(startDirectory.Length-Name.Length-1,Name.Length+1);
+            return CutResult;
+        }
         
         public static int Sum(int x, int y) {
             return x + y;

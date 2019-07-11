@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using WpfProject.Common;
 using System;
+using System.Collections.ObjectModel;
 
 namespace WpfProject.Model {
     public enum ProjectItemType { Project, Folder, File }
@@ -9,7 +10,7 @@ namespace WpfProject.Model {
         public string Name { get; set; }
         public string Path { get; set; }
         public ProjectItemType Type { get; set; }
-        public List<ProjectItem> Items { get; }
+        public ObservableCollection<ProjectItem> Items { get; }
         public string text;
         public string Text { get { return text; }
             set {
@@ -21,7 +22,7 @@ namespace WpfProject.Model {
 
         Action<ProjectItem> onClosed;
         public ProjectItem(Action<ProjectItem> onClosed) {
-            Items = new List<ProjectItem>();
+            Items = new ObservableCollection<ProjectItem>();
             this.onClosed = onClosed;
             CloseTabCommand = new BaseCommand(OnCloseTabCommandExecute, CanCloseTab);
         }

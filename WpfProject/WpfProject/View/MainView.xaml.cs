@@ -37,5 +37,24 @@ namespace WpfProject.View {
             var dc = DataContext as MainViewModel;
             dc.SelectedItem = e.NewValue as ProjectItem;
         }
+
+        void Editor_KeyDown(object sender, KeyEventArgs e) {
+            var dc = DataContext as MainViewModel;
+            if(e.Key == Key.Enter ) {
+                Editor_LostFocus(sender, e);
+            }
+        }
+
+        void Editor_LostFocus(object sender, RoutedEventArgs e) {
+            var dc = DataContext as MainViewModel;
+            dc.RefreshItemAndFile(dc.SelectedItem);
+            dc.CloseEditor();
+        }
+
+        void DisplayText_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e) {
+            var dc = DataContext as MainViewModel;
+            var tb = sender as TextBlock;
+            tb.Text = dc.SelectedItem.Name;
+        }
     }
 }

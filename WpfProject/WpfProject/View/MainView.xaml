@@ -41,7 +41,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Margin="5,0,5,0" Text="{Binding Path=Name}"/>
+                                    <TextBlock Margin="5,0,5,0" Text="{Binding Path=Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                     <Button Grid.Column="1" Content="X" Command="{Binding Path=CloseTabCommand}"  />
                                 </Grid>
                             </DataTemplate>
@@ -71,7 +71,9 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image x:Name="image" Grid.Column="0"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding Path=Name}"/>
+                                    <TextBlock x:Name="displayText" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible" IsVisibleChanged="DisplayText_IsVisibleChanged" />
+                                    <TextBox x:Name="editor" Grid.Column="1" Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed"
+                                             PreviewKeyDown="Editor_KeyDown" LostFocus="Editor_LostFocus"/>
                                 </Grid>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding Type}" Value="Project">
@@ -79,6 +81,10 @@
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Type}" Value="Folder">
                                         <Setter TargetName="image" Property="Source" Value="pack://application:,,,/Images/Open_16x16.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                        <Setter TargetName="displayText" Property="Visibility" Value="Collapsed"/>
+                                        <Setter TargetName="editor" Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                 </DataTemplate.Triggers>
                             </DataTemplate>
@@ -90,10 +96,10 @@
             <TreeView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Add New">
-                        <MenuItem Header="Folder" Command="{Binding AddNewFolderCommand}"/>
+                        <MenuItem Header="Folder" Command="{Binding ContextMenuAddFileCommand}"/>
                         <MenuItem Header="File"/>
                     </MenuItem>
-                    <MenuItem Header="Rename"/>
+                    <MenuItem Header="Rename" Command="{Binding RenameCommand}"/>
                 </ContextMenu>
             </TreeView.ContextMenu>
         </TreeView>

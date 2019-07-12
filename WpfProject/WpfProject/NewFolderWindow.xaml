@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         xmlns:v="clr-namespace:WpfProject.View"
         Title="ChoseFolderWindow" Height="170" Width="400">
-    <Grid>
+    <Grid RenderTransformOrigin="0.487,0.396">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -14,8 +14,8 @@
         <v:NewFolderView/>
         
         <WrapPanel HorizontalAlignment="Right" Grid.Row="1" Margin="15">
-            <Button IsCancel="True" x:Name="CancelButton"  Content="Cancel" MinWidth="50" Margin="10"/>
             <Button IsDefault="True" x:Name="AcceptButton" Click="AcceptButton_Click"  Content="Create folder" MinWidth="50" Margin="10"/>
+            <Button IsCancel="True" x:Name="CancelButton"  Content="Cancel" MinWidth="50" Margin="10"/>
         </WrapPanel>
     </Grid>
 </Window>

@@ -19,11 +19,11 @@ namespace WpfProject.Common {
             this.action2 = action;
             this.canExecuteParameter = canExecuteParameter;
         }
-        void ICommand.Execute(object parameter) {
+        public void Execute(object parameter) {
             action1?.Invoke();
             action2?.Invoke(parameter);
         }
-        bool ICommand.CanExecute(object parameter) {
+        public bool CanExecute(object parameter) {
             return this.canExecute?.Invoke()
                 ?? this.canExecuteParameter?.Invoke(parameter)
                 ?? true;

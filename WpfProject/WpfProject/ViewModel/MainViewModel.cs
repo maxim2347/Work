@@ -1,4 +1,4 @@
-﻿//using Microsoft.Win32;
+﻿using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +18,8 @@ namespace WpfProject.ViewModel {
         public BaseCommand CloseCurrentTabCommand { get; }
         public BaseCommand AddNewFileCommand { get; }
         public BaseCommand AddNewFolderCommand { get; }
-        public BaseCommand ContextMenuAddFileCommand { get; }
+        public BaseCommand ContextMenuAddFolderCommand { get; }
+        public BaseCommand RenameCommand { get; }
         public ObservableCollection<ProjectItem> Items { get; }
         public ObservableCollection<ProjectItem> Tabs { get; }
         public ProjectItem SelectedItem { get { return selectedItem; } set { SetProperty(ref selectedItem, value, OnSelectedItemChanged); } }
@@ -36,8 +37,10 @@ namespace WpfProject.ViewModel {
             SaveAsCommand = new BaseCommand(SaveAs, CanSaveAs);
             CloseAllTabsCommand = new BaseCommand(CloseAllTabs, CanCloseTabs);
             CloseCurrentTabCommand = new BaseCommand(CloseCurrentTab, CanCloseTabs);
-            AddNewFileCommand = new BaseCommand(AddNewFile, CanAddNewFile);
-            AddNewFolderCommand = new BaseCommand(AddNewFolder, CanContextMenuAddFile);
+            AddNewFileCommand = new BaseCommand(AddNewFile);
+            AddNewFolderCommand = new BaseCommand(AddNewFolder);
+            ContextMenuAddFolderCommand = new BaseCommand(ContextMenuAddFolder, CanContextMenuAddFile);
+            RenameCommand = new BaseCommand(RenameItem);
         }
 
         void OnSelectedItemChanged(ProjectItem oldValue, ProjectItem newValue) {
@@ -50,6 +53,8 @@ namespace WpfProject.ViewModel {
             CloseAllTabsCommand.RaiseCanExecuteChanged();
             CloseCurrentTabCommand.RaiseCanExecuteChanged();
             AddNewFolderCommand.RaiseCanExecuteChanged();
+            ContextMenuAddFolderCommand.RaiseCanExecuteChanged();
+            RenameCommand.RaiseCanExecuteChanged();
         }
 
         void GetDirectoryTree(string start, ProjectItem root) {
@@ -140,7 +145,7 @@ namespace WpfProject.ViewModel {
                 AddItemToItems(newItem, Items[0]);
             }
         }
-        void AddItemToItems(ProjectItem newItem, ProjectItem root) {
+        public void AddItemToItems(ProjectItem newItem, ProjectItem root) {
             string newItemPerentPath = newItem.Path.Remove(newItem.Path.Length - newItem.Name.Length - 1, newItem.Name.Length + 1);
             foreach(ProjectItem x in root.Items) {
                 if(x.Path == newItemPerentPath && x.Type != ProjectItemType.File) {
@@ -152,14 +157,13 @@ namespace WpfProject.ViewModel {
 
         }
 
-        void OnContextMenuAddFile() {
+        void ContextMenuAddFolder() {
             if(SelectedItem?.Type != ProjectItemType.File)
                 AddNewFile("");
         }
         bool CanContextMenuAddFile() {
-            if(SelectedItem.Type != ProjectItemType.File)
-                return true;
-            return false;
+            return SelectedItem?.Type != ProjectItemType.File;
+               
         }
 
         void OnTextChanged(object sender, EventArgs e) {
@@ -169,6 +173,29 @@ namespace WpfProject.ViewModel {
         protected virtual bool? ShowNewFolderDialog(NewFolderViewModel vm) {
             var newFolderWindow = new NewFolderWindow() { DataContext = vm };
             return newFolderWindow.ShowDialog();
+        }
+
+        void RenameItem() {
+            ShowEditor();
+            
+        }
+
+        public void ShowEditor() {
+            SelectedItem.IsEditing = true;
+        }
+        public void CloseEditor() {
+            SelectedItem.IsEditing = false;
+        }
+
+        public void RefreshItemAndFile(ProjectItem item) {
+            string oldName = FileSystem.GetName(item.Path);
+            string oldDirectory = item.Path.Remove(item.Path.Length - oldName.Length, oldName.Length);
+            string newPath = oldDirectory + item.Name;
+            if(item.Path != newPath) {
+                FileSystem.RenameFile(item.Path, item.Name);
+                item.Path = newPath;
+            }
+            
         }
     }
 }

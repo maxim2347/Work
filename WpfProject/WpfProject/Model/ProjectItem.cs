@@ -7,7 +7,13 @@ namespace WpfProject.Model {
     public enum ProjectItemType { Project, Folder, File }
 
     public class ProjectItem : BaseVM {
-        public string Name { get; set; }
+        public string name;
+        public string Name { get { return name; } set {
+                if(name == value) return;
+                name = value;
+                SetProperty(ref name, value);
+            } 
+        }
         public string Path { get; set; }
         public ProjectItemType Type { get; set; }
         public ObservableCollection<ProjectItem> Items { get; }
@@ -19,6 +25,8 @@ namespace WpfProject.Model {
                 RiseTextChange();
             }
         }
+        bool isEditing;
+        public bool IsEditing { get { return isEditing; } set { SetProperty(ref isEditing, value); } }
 
         Action<ProjectItem> onClosed;
         public ProjectItem(Action<ProjectItem> onClosed) {
